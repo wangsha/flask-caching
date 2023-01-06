@@ -5,6 +5,7 @@ Version 2.0.2
 -------------
 
 - migrate ``flask_caching.backends.RedisCluster`` dependency from redis-py-cluster to redis-py
+- added ``flask_cacheing.backends.DynamoCache``
 
 Version 2.0.1
 -------------

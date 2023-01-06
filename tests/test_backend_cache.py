@@ -227,7 +227,8 @@ class TestRedisCacheClientsOverride(CacheTestsBase):
         c._read_client = DummyReadClient()
         actual_values = c.get_many("foo")
         assert c.set("bacon", "eggs") == "spam"
-        for actual, expected in zip(actual_values, EXPECTED_GET_MANY_VALUES):
+        results = zip(actual_values, EXPECTED_GET_MANY_VALUES)  # noqa: B905
+        for actual, expected in results:
             assert actual == expected
 
 
@@ -270,3 +271,17 @@ class TestNullCache(CacheTestsBase):
 
     def test_has(self, c):
         assert not c.has("foo")
+
+
+class TestDynamoDBCache(GenericCacheTests):
+    @pytest.fixture(autouse=True)
+    def make_cache(self):
+        import os
+
+        os.environ.setdefault("AWS_ACCESS_KEY_ID", "RANDOM")
+        os.environ.setdefault("AWS_SECRET_ACCESS_KEY", "RANDOM")
+        c = backends.DynamoDbCache(
+            endpoint_url="http://localhost:8000", region_name="us-west-2"
+        )
+        c.clear()
+        yield lambda: c

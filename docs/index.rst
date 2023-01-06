@@ -365,6 +365,7 @@ The following configuration values exist for Flask-Caching:
                                 * **SpreadSASLMemcachedCache** (pylibmc
                                   required; old name is
                                   **spreadsaslmemcached**)
+                                * **DynamoDbCache** (boto3 required)
 
 ``CACHE_NO_NULL_WARNING``       Silence the warning message when using
                                 cache type of 'null'.
@@ -388,7 +389,7 @@ The following configuration values exist for Flask-Caching:
 ``CACHE_KEY_PREFIX``            A prefix that is added before all keys.
                                 This makes it possible to use the same
                                 memcached server for different apps.
-                                Used only for RedisCache and MemcachedCache
+                                Used only for RedisCache, MemcachedCache and DynamoDbCache
 ``CACHE_SOURCE_CHECK``          The default condition applied to function
                                 decorators which controls if the source code of
                                 the function should be included when forming the
@@ -429,6 +430,10 @@ The following configuration values exist for Flask-Caching:
                                 protocols ``redis://``, ``rediss://`` (redis over TLS) and
                                 ``unix://``. See more info about URL support [here](http://redis-py.readthedocs.io/en/latest/index.html#redis.ConnectionPool.from_url).
                                 Used only for RedisCache.
+``DYNAMODB_CACHE_TABLE``        DynamoDB table name, default is ``python-cache``
+``DYNAMODB_CACHE_KEY_FIELD``    cache key field name, string, default is ``key``
+``DYNAMODB_CACHE_TTL_FIELD``    ttl field name, string, default is ``expire_at``
+``DYNAMODB_CACHE_REGION``       AWS region of the dynamodb service
 =============================== ==================================================================
 
 
@@ -639,6 +644,25 @@ UWSGICache
 Set ``CACHE_TYPE`` to ``flask_caching.contrib.uwsgicache.UWSGICache`` to use
 this type.  You also have to set ``CACHE_UWSGI_NAME`` to the cache name you
 set in your uWSGI configuration.
+
+
+DynamoDbCache
+`````````````
+
+Set ``CACHE_TYPE`` to ``DynamoDbCache`` to use this type.
+
+Use AWS DynamoDB as backend.
+Limitations: DynamoDB table items are limited to 400 KB in size.
+
+Relevant configuration values
+
+- DYNAMODB_CACHE_TABLE
+- DYNAMODB_CACHE_KEY_FIELD
+- DYNAMODB_CACHE_TTL_FIELD
+- DYNAMODB_CACHE_REGION
+- DYNAMODB_ENDPOINT_URL
+
+.. versionadded:: 2.0.2
 
 
 Custom Cache Backends

@@ -39,6 +39,12 @@ jobs:
         sudo apt-get install libmemcached-dev memcached redis
         sudo systemctl stop memcached
         sudo systemctl stop redis-server
+    - name: Setup Docker on macOS
+      if: matrix.os == 'macos-latest'
+      uses: docker-practice/actions-setup-docker@master
+      timeout-minutes: 12
+    - name: setup dynamodb-local
+      uses: rrainn/dynamodb-action@v2.0.1
     - name: update pip
       run: |
         pip install -U wheel

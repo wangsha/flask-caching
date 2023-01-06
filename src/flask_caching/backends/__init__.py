@@ -8,6 +8,7 @@
     :copyright: (c) 2010 by Thadeus Burgess.
     :license: BSD, see LICENSE for more details.
 """
+from flask_caching.backends.dynamodbcache import DynamoDbCache
 from flask_caching.backends.filesystemcache import FileSystemCache
 from flask_caching.backends.memcache import MemcachedCache
 from flask_caching.backends.memcache import SASLMemcachedCache
@@ -18,7 +19,6 @@ from flask_caching.backends.rediscache import RedisClusterCache
 from flask_caching.backends.rediscache import RedisSentinelCache
 from flask_caching.backends.simplecache import SimpleCache
 from flask_caching.backends.uwsgicache import UWSGICache
-
 
 __all__ = (
     "null",
@@ -77,3 +77,7 @@ def saslmemcached(app, config, args, kwargs):
 
 def spreadsaslmemcached(app, config, args, kwargs):
     return SpreadSASLMemcachedCache.factory(app, config, args, kwargs)
+
+
+def dynamodb(app, config, args, kwargs):
+    return DynamoDbCache.factory(app, config, args, kwargs)
