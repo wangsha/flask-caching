@@ -34,7 +34,7 @@ class BaseCache(CachelibBaseCache):
 
         :param keys: The function accepts multiple keys as positional
                         arguments.
-        :returns: A list containing all sucessfuly deleted keys
+        :returns: A list containing all successfully deleted keys
         :rtype: boolean
         """
         deleted_keys = []
