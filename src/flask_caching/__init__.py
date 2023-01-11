@@ -169,9 +169,13 @@ class Cache:
             app.extensions = {}
 
         app.extensions.setdefault("cache", {})
-        app.extensions["cache"][self] = cache_factory(
-            app, config, cache_args, cache_options
-        )
+        if import_me.find('cachelib') > -1:
+            cache = cache_factory(*cache_args, **cache_options)
+        else:
+            cache = cache_factory(
+                app, config, cache_args, cache_options
+            )
+        app.extensions["cache"][self] = cache
         self.app = app
 
     def _call_fn(self, fn, *args, **kwargs):
@@ -427,7 +431,7 @@ class Cache:
                 # (the way `url_for` expects them)
                 argspec_args = inspect.getfullargspec(f).args
 
-                for arg_name, arg in zip(argspec_args, args):
+                for arg_name, arg in zip(argspec_args, args):  # noqa: B905
                     kwargs[arg_name] = arg
 
                 return _make_cache_key(args, kwargs, use_request=False)
@@ -573,9 +577,8 @@ class Cache:
             dirty = True
 
         if dirty:
-            self.cache.set_many(
-                dict(zip(fetch_keys, version_data_list)), timeout=timeout
-            )
+            data = dict(zip(fetch_keys, version_data_list))  # noqa: B905
+            self.cache.set_many(data, timeout=timeout)
 
         return fname, "".join(version_data_list)
 

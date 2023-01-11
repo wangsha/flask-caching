@@ -6,3 +6,4 @@ redis
 Flask
 asgiref
 cachelib
+boto3
